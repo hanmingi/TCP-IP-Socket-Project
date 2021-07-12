@@ -1,21 +1,40 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define TRUE 1
+#define FALSE 0
+#define BUFSIZE 1024
 
 void open_Server();
 
 //print error func
 void error_handling(char *message);
 
+int clnt_sock;
+
 int main(int argc, char **argv){
+
+    char buf[BUFSIZE];
+    char command[10];
+
     open_Server();
     printf("connect success!\n");
+
+    //Recv command line
+    while(TRUE){
+        recv(clnt_sock, buf, sizeof(buf), 0);
+        sscanf(buf, "%s", command);
+        printf("Recv Command > %s\n", command);
+    }
 }
 
 void open_Server(){
 
     int serv_sock;
-    int clnt_sock;
+
     int clnt_addr_size;
     int PORT = 9999;
 
