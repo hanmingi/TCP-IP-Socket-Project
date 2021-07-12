@@ -1,15 +1,24 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <stdlib.h>
+#include <string.h>
+#include <arpa/inet.h>
 
 #define PORT 9999
+#define TRUE 1
+#define BUFSIZE 1024
 
 void connect_Server(char* ipAddress);
 
 //print error func
 void error_handling(char *message);
 
+int clnt_sock;
+
 int main(int argc, char **argv){
+
+    char menu[BUFSIZE];
 
     if (argc != 2){
         printf("Usage : %s <IP>\n", argv[0]);
@@ -18,13 +27,19 @@ int main(int argc, char **argv){
 
     connect_Server(argv[1]);
 
-    printf("connect Server!!!\n");
-
+    //system call clear
+    system("clear");
+    while (TRUE) {
+        // command line
+        printf("\033[1;32mCommand line > ");
+        fgets(menu, BUFSIZE, stdin);
+        fprintf(stderr, "\033[97m");
+        send(clnt_sock, menu, sizeof(menu) + 1, 0);
+    }
 }
 
 void connect_Server(char* ipAddress){
 
-    int clnt_sock;
 
     struct sockaddr_in serv_addr;
 
