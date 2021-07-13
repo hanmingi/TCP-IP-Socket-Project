@@ -20,6 +20,7 @@ int clnt_sock;
 int main(int argc, char **argv){
 
     char menu[BUFSIZE];
+    int status;
 
     if (argc != 2){
         printf("Usage : %s <IP>\n", argv[0]);
@@ -36,7 +37,19 @@ int main(int argc, char **argv){
         printf("\033[1;32mCommand line > ");
         fgets(menu, BUFSIZE, stdin);
         fprintf(stderr, "\033[97m");
-        send(clnt_sock, menu, sizeof(menu) + 1, 0);
+
+        if(!strcmp(menu, "help\n"))
+            print_help_Command();
+
+        else if(!strcmp(menu, "quit\n")){
+            send(clnt_sock, menu, sizeof(menu) + 1, 0);
+            recv(clnt_sock, &status, sizeof(int), 0);
+            if(status)
+                exit(0);
+        }
+
+
+        //send(clnt_sock, menu, sizeof(menu) + 1, 0);
     }
 }
 
@@ -69,7 +82,6 @@ void error_handling(char *message) {
 void print_help_Command(){
     printf("\n\033[1;36m Core Commands\n");
     printf("\033[1;36m =================\n");
-    printf("\033[1;0m \n");
     printf("\033[1;0m \n");
     printf("\033[1;0m       Command             Description\n");
     printf("\033[1;0m       -------             ---------------------\n");

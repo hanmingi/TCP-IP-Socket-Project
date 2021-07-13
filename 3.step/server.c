@@ -26,6 +26,12 @@ int main(int argc, char **argv){
         recv(clnt_sock, buf, sizeof(buf) + 1, 0);
         sscanf(buf, "%s", command);
         printf("Recv command > %s\n", command);
+
+        if(!strcmp(command, "quit")){
+            int status = 1;
+            send(clnt_sock, &status, sizeof(int), 0);
+            exit(0);
+        }
     }
 }
 
