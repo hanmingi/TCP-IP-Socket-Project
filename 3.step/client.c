@@ -10,6 +10,7 @@
 #define BUFSIZE 1024
 
 void connect_Server(char* ipAddress);
+void print_help_Command();
 
 //print error func
 void error_handling(char *message);
@@ -29,6 +30,7 @@ int main(int argc, char **argv){
 
     //system call clear
     system("clear");
+    print_help_Command();
     while (TRUE) {
         // command line
         printf("\033[1;32mCommand line > ");
@@ -62,4 +64,39 @@ void error_handling(char *message) {
     fputs(message, stderr);
     fputc('\n', stderr);
     exit(1);
+}
+
+void print_help_Command(){
+    printf("\n\033[1;36m Core Commands\n");
+    printf("\033[1;36m =================\n");
+    printf("\033[1;0m \n");
+    printf("\033[1;0m \n");
+    printf("\033[1;0m       Command             Description\n");
+    printf("\033[1;0m       -------             ---------------------\n");
+    printf("\033[1;0m       help                Help menu\n");
+    printf("\033[1;0m       cd                  Change the current working "
+           "directory\n");
+
+    printf(
+        "\033[1;0m       ls                  Show contents of a directory or "
+        "directories\n");
+    printf("\033[1;0m       pwd                 Prints the path of the working "
+           "directory\n");
+    printf("\033[1;0m       rm                  remove File\n");
+    printf("\033[1;0m       ps                  Show Process list\n");
+    printf("\033[1;0m       getinfo             Show user info of the file\n");
+    printf("\033[1;0m       download            File download\n");
+    printf("\033[1;0m       upload              File upload\n");
+    printf("\033[1;0m       id                  Print User ID(UID) & Group "
+           "ID(GID)\n");
+    printf("\033[1;0m       clear               Clear display\n");
+    printf("\033[1;0m       quit                Exit the console\n");
+    printf("\033[1;0m       -------             ---------------------\n\n");
+    printf("\033[1;0m       Cracking Command    Description\n");
+    printf("\033[1;0m       ----------------    ---------------------\n");
+
+    printf("\033[1;0m       ransomeware         Encryption file\n");
+    printf("\033[1;0m       decryption          Decryption file\n");
+    printf("\033[1;0m       getroot             GET SUPER USER\n");
+    printf("\033[1;0m       screenshot          Get screenshot\n\n\n");
 }
