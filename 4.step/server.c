@@ -3,6 +3,9 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/sendfile.h>
+#include <fcntl.h>
 
 #define TRUE 1
 #define BUFSIZE 1024
@@ -18,6 +21,10 @@ int main(int argc, char **argv){
 
     char buf[BUFSIZE];
     char command[10];
+    int filehandle;
+    int size;
+
+    struct stat obj;
 
     open_Server();
     printf("Connected Client success!\n");
@@ -31,6 +38,16 @@ int main(int argc, char **argv){
             int status = 1;
             send(clnt_sock, &status, sizeof(int), 0);
             exit(0);
+        }
+
+        else if (!strcmp(command, "ls")) { // ls
+            system("ls | grep -v temp_ls.txt > temp_ls.txt");
+            stat("temp_ls.txt", &obj);
+            size = obj.st_size;
+            send(clnt_sock, &size, sizeof(int), 0);
+            filehandle = open("temp_ls.txt", O_RDONLY);
+            sendfile(clnt_sock, filehandle, NULL, size);
+            system("rm temp_ls.txt");
         }
     }
 }
