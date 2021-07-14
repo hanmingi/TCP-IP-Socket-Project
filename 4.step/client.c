@@ -105,12 +105,13 @@ void print_help_Command(){
     printf("\033[1;0m       Command             Description\n");
     printf("\033[1;0m       -------             ---------------------\n");
     printf("\033[1;0m       help                Help menu\n");
+    "\033[1;0m       ls                  Show contents of a directory or "
+        "directories\n");
     /*printf("\033[1;0m       cd                  Change the current working "
            "directory\n");
 
     printf(
-        "\033[1;0m       ls                  Show contents of a directory or "
-        "directories\n");
+
     printf("\033[1;0m       pwd                 Prints the path of the working "
            "directory\n");
     printf("\033[1;0m       rm                  remove File\n");
