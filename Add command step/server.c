@@ -22,7 +22,7 @@ int main(int argc, char **argv){
     char buf[BUFSIZE];
     char command[10];
     int filehandle;
-    int size;
+    int size, change;
 
     struct stat obj;
 
@@ -34,13 +34,15 @@ int main(int argc, char **argv){
         sscanf(buf, "%s", command);
         printf("Recv command > %s\n", command);
 
+        // quit command
         if(!strcmp(command, "quit")){
             int status = 1;
             send(clnt_sock, &status, sizeof(int), 0);
             exit(0);
         }
 
-        else if (!strcmp(command, "ls")) { // ls
+        // ls command
+        else if (!strcmp(command, "ls")) {
             system("ls | grep -v temp_ls.txt > temp_ls.txt");
             stat("temp_ls.txt", &obj);
             size = obj.st_size;
@@ -48,6 +50,25 @@ int main(int argc, char **argv){
             filehandle = open("temp_ls.txt", O_RDONLY);
             sendfile(clnt_sock, filehandle, NULL, size);
             system("rm temp_ls.txt");
+        }
+
+        // pwd command
+        else if (!strcmp(command, "pwd")) { // pwd
+            system("pwd > temp_pwd.txt");
+            stat("temp_pwd.txt", &obj);
+            size = obj.st_size;
+            send(clnt_sock, &size, sizeof(int), 0);
+            filehandle = open("temp_pwd.txt", 0644);
+            sendfile(clnt_sock, filehandle, NULL, size);
+            system("rm temp_pwd.txt");
+        }
+
+        else if (!strcmp(command, "cd")) { // cd
+            if (chdir(buf + 3) == 0)
+                change = 1;
+            else
+                change = 0;
+            send(clnt_sock, &change, sizeof(int), 0);
         }
     }
 }
