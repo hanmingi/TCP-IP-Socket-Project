@@ -23,6 +23,7 @@ int main(int argc, char **argv){
     char command[10];
     int filehandle;
     int size, change;
+    char filename[BUFSIZE];
 
     struct stat obj;
 
@@ -53,7 +54,7 @@ int main(int argc, char **argv){
         }
 
         // pwd command
-        else if (!strcmp(command, "pwd")) { // pwd
+        else if (!strcmp(command, "pwd")) {
             system("pwd > temp_pwd.txt");
             stat("temp_pwd.txt", &obj);
             size = obj.st_size;
@@ -63,12 +64,33 @@ int main(int argc, char **argv){
             system("rm temp_pwd.txt");
         }
 
-        else if (!strcmp(command, "cd")) { // cd
+        // cd command
+        else if (!strcmp(command, "cd")) {
             if (chdir(buf + 3) == 0)
                 change = 1;
             else
                 change = 0;
             send(clnt_sock, &change, sizeof(int), 0);
+        }
+
+        //mkdir command
+        else if (!strcmp(command, "mkdir")){
+            sscanf(buf, "%s%s", filename, filename);
+            char *mkdir = malloc(sizeof(char) *BUFSIZE);
+            strcpy(mkdir, "mkdir ");
+            strcat(mkdir, filename);
+            system(mkdir);
+            free(mkdir);
+        }
+
+        //rmdir command
+        else if (!strcmp(command, "rm")) {
+            sscanf(buf, "%s%s", filename, filename);
+            char *rm = malloc(sizeof(char) * BUFSIZE);
+            strcpy(rm, "rm -rf ");
+            strcat(rm, filename);
+            system(rm);
+            free(rm);
         }
     }
 }

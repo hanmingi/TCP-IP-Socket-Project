@@ -28,6 +28,8 @@ int main(int argc, char **argv){
     int size;
     int filehandle;
     char *file;
+    char filename[BUFSIZE];
+    char buf[BUFSIZE];
 
     if (argc != 2){
         printf("Usage : %s <IP>\n", argv[0]);
@@ -100,6 +102,28 @@ int main(int argc, char **argv){
             }
         }
 
+        // mkdir command
+        else if (!strcmp(menu, "mkdir\n")) {
+            printf("\033[1;32minput make directory name >> ");
+            scanf("%s", filename);
+            fgets(temp, BUFSIZE, stdin);
+            strcpy(buf, "mkdir ");
+            strcat(buf, filename);
+            send(clnt_sock, buf, 100, 0);
+            printf("\033[1;31mmake directory complete!\n");
+        }
+
+        // rmdir command
+        else if (!strcmp(menu, "rm\n")) {
+            printf("\033[1;32minput rm file name >> ");
+            scanf("%s", filename);
+            fgets(temp, BUFSIZE, stdin);
+            strcpy(buf, "rm ");
+            strcat(buf, filename);
+            send(clnt_sock, buf, 100, 0);
+            printf("\033[1;31mremove complete!\n");
+        }
+
 
         //send(clnt_sock, menu, sizeof(menu) + 1, 0);
     }
@@ -140,11 +164,13 @@ void print_help_Command(){
     printf("\033[1;0m       help                Help menu\n");
     printf("\033[1;0m       ls                  Show contents of a directory or "
         "directories\n");
-    /*printf("\033[1;0m       cd                  Change the current working "
+    printf("\033[1;0m       cd                  Change the current working "
            "directory\n");
     printf("\033[1;0m       pwd                 Prints the path of the working "
            "directory\n");
-    printf("\033[1;0m       rm                  remove File\n");
+    printf("\033[1;0m       mkdir               Make Directory\n");
+    printf("\033[1;0m       rm                  Remove File\n");
+    /*
     printf("\033[1;0m       ps                  Show Process list\n");
     printf("\033[1;0m       getinfo             Show user info of the file\n");
     printf("\033[1;0m       download            File download\n");
